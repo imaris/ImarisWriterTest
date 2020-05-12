@@ -17,7 +17,8 @@
 
 #define bpCommandLine bpBCommandLine
 
-#include "imariswriter/interface/bpImageConverter.h"
+#include "ImarisWriter/interface/bpImageConverter.h"
+
 #include <random>
 
 #if defined(_WIN32)
@@ -26,6 +27,7 @@
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 #else
+#include <time.h>
 #endif
 
 #include <fstream>
@@ -61,7 +63,9 @@ bpUInt64 PerformanceCounter()
   QueryPerformanceCounter(&vTime);
   return static_cast<bpUInt64>(vTime.QuadPart);
 #else
-  return 0;
+  struct timespec vTimeSpec;
+  clock_gettime(CLOCK_MONOTONIC, &vTimeSpec);
+  return vTimeSpec.tv_sec + vTimeSpec.tv_nsec / 1000000000.0;
 #endif
 }
 
@@ -72,7 +76,7 @@ bpUInt64 PerformanceFrequency()
   QueryPerformanceFrequency(&vFrequency);
   return static_cast<bpUInt64>(vFrequency.QuadPart);
 #else
-  return 0;
+  return 1;
 #endif
 }
 

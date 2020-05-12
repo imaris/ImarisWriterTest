@@ -37,7 +37,6 @@ static inline void bpFromString(const bpString& aString, Type& aResult)
   i >> aResult;
 }
 
-template <>
 static inline void bpFromString(const bpString& aString, bpString& aResult)
 {
   aResult = aString;
