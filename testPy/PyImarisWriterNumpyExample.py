@@ -70,7 +70,7 @@ class MyCallbackClass(PW.CallbackClass):
 
 def run(configuration):
     image_size = PW.ImageSize(x=600, y=400, z=5, c=1, t=1)
-    dimension_sequence = PW.DimensionSequence('z', 'y', 'x', 'c', 't')
+    dimension_sequence = PW.DimensionSequence('x', 'y', 'z', 'c', 't')
     block_size = image_size
     sample_size = PW.ImageSize(x=1, y=1, z=1, c=1, t=1)
     output_filename = f'PyImarisWriterNumpyExample{configuration.mId}.ims'
@@ -80,12 +80,12 @@ def run(configuration):
     options.mCompressionAlgorithmType = PW.eCompressionAlgorithmGzipLevel2
     options.mEnableLogProgress = True
 
-    np_data = np.zeros((image_size.x, image_size.y, image_size.z), dtype=configuration.mNp_type)
+    np_data = np.zeros((image_size.z, image_size.y, image_size.x), dtype=configuration.mNp_type)
     x1 = int(image_size.x / 3)
     x2 = int(image_size.x / 3 * 2)
-    np_data[0:x1] = 10.0
-    np_data[x1:x2] = 130.0
-    np_data[x2:] = 240.0
+    np_data[:,:,0:x1] = 10.0
+    np_data[:,:,x1:x2] = 130.0
+    np_data[:,:,x2:] = 240.0
 
     application_name = 'PyImarisWriter'
     application_version = '1.0.0'
