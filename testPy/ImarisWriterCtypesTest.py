@@ -18,6 +18,7 @@
 Python Version of bpImarisWriter96TestProgram.c that uses ImarisWriterCtypes
 """
 
+import platform
 import sys
 
 from PyImarisWriter import ImarisWriterCtypes as IW
@@ -136,7 +137,7 @@ def get_parameters(num_channels):
         channel_parameter_section.mValuesCount = num_parameters_per_channel
         parameter_section_data[section_index] = channel_parameter_section
         
-    parameters = IW.bpConverterTypesC_Parameters(parameter_section_data, number_of_sections)
+    parameters = IW.bpConverterTypesC_ParametersPtr(IW.bpConverterTypesC_Parameters(parameter_section_data, number_of_sections))
     return parameters
 
 def get_time_infos(num_time_infos):
@@ -199,9 +200,20 @@ def print_user_data(title, user_data):
     title,
     user_data.mProgress,
     user_data.mImageIndex))
+
+def get_dll_filename():
+    if platform.system() == 'Windows':
+        return 'bpImarisWriter96.dll'
+    elif platform.system() == 'Darwin':
+        return 'libbpImarisWriter96.dylib'
+    elif platform.system() == 'Linux':
+        return 'libbpImarisWriter96.so'
+    else:
+        print('Platform not supported: "{}"'.format(platform.system()))
+        return None
     
 def test_convert(test_index):
-    dll_filename = 'bpImarisWriter96.dll'
+    dll_filename = get_dll_filename()
     print('Loading dll: {}'.format(dll_filename))
     cdll = IW.CDLL(dll_filename)
     
